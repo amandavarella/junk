@@ -31,6 +31,12 @@ def parse!
     opts.on('-w', '--weeks NUMBER', 'Number of weeks to report on') do |n|
       options[:weeks] = n.to_i
     end
+
+    opts.on('-t', '--transpose', 'Paste results transposed') do |n|
+      options[:transposed] = true
+      puts options[:transposed]
+    end
+
   end.parse!
 
   options[:start_date] ||= Date.today.beginning_of_week
