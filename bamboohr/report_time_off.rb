@@ -34,7 +34,6 @@ def parse!
 
     opts.on('-t', '--transpose', 'Paste results transposed') do |n|
       options[:transposed] = true
-      puts options[:transposed]
     end
 
   end.parse!
@@ -116,6 +115,17 @@ def print_totals(reports)
   end
 end
 
+def print_totals_transposed(reports)
+
+  totals = Hash[reports.first.last.keys.sort.map { |n| [ n, [] ] }]
+  names=totals.keys.join(",")
+  header = ("date,"+ names)
+
+  puts header
+
+end
+
+
 # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
 def main
   # setup
@@ -170,7 +180,13 @@ def main
   end
 
   # print the totals
-  print_totals(reports)
+  case options[:transposed]
+    when true
+      print_totals_transposed(reports)
+    else
+      print_totals(reports)
+  end
+
 end
 # rubocop:enable Metrics/MethodLength,Metrics/AbcSize
 
