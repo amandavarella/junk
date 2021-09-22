@@ -123,11 +123,20 @@ def print_totals_transposed(reports)
   puts header
 
   dates=reports.map { |t, r| t.start.to_s }
-  puts dates
 
+  reports.map(&:last).each { |r| 
+    r.each { |name, count| 
+      totals[name] << count 
+    } 
+  }
 
-
-  
+  dates.each_with_index do |date,i|
+    line=date
+    totals.each do |name, counts|
+      line+="," + counts[i].to_s
+    end
+    puts line
+  end
 
 end
 
