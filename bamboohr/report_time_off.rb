@@ -31,6 +31,11 @@ def parse!
     opts.on('-w', '--weeks NUMBER', 'Number of weeks to report on') do |n|
       options[:weeks] = n.to_i
     end
+
+    opts.on('-t', '--transpose', 'Paste results transposed') do |n|
+      options[:transposed] = true
+    end
+
   end.parse!
 
   options[:start_date] ||= Date.today.beginning_of_week
@@ -110,6 +115,32 @@ def print_totals(reports)
   end
 end
 
+def print_totals_transposed(reports)
+
+  totals = Hash[reports.first.last.keys.sort.map { |n| [ n, [] ] }]
+  names=totals.keys.join(",")
+  header = ("date,"+ names)
+  puts header
+
+  dates=reports.map { |t, r| t.start.to_s }
+
+  reports.map(&:last).each { |r| 
+    r.each { |name, count| 
+      totals[name] << count 
+    } 
+  }
+
+  dates.each_with_index do |date,i|
+    line=date
+    totals.each do |name, counts|
+      line+="," + counts[i].to_s
+    end
+    puts line
+  end
+
+end
+
+
 # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
 def main
   # setup
@@ -164,7 +195,13 @@ def main
   end
 
   # print the totals
-  print_totals(reports)
+  case options[:transposed]
+    when true
+      print_totals_transposed(reports)
+    else
+      print_totals(reports)
+  end
+
 end
 # rubocop:enable Metrics/MethodLength,Metrics/AbcSize
 
