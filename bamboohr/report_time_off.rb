@@ -120,8 +120,14 @@ def print_totals_transposed(reports)
   totals = Hash[reports.first.last.keys.sort.map { |n| [ n, [] ] }]
   names=totals.keys.join(",")
   header = ("date,"+ names)
-
   puts header
+
+  dates=reports.map { |t, r| t.start.to_s }
+  puts dates
+
+
+
+  
 
 end
 
